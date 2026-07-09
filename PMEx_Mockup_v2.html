@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PMEx – Mockup v2</title>
+<style>
+  :root{
+    --brand:#114342; --blue:#0f766e; --blue-d:#114342; --teal:#0d9488; --mint:#5eead4;
+    --amber:#d97706; --red:#dc2626; --green:#16a34a; --slate:#114342; --muted:#64748b;
+    --bg:#f1f5f9; --card:#fff; --line:#e2e8f0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI","Sarabun",system-ui,sans-serif;background:var(--bg);color:#0f172a;font-size:14px}
+  .app{display:flex;min-height:100vh}
+  .side{width:230px;background:var(--brand);color:#cbd5e1;flex-shrink:0;position:sticky;top:0;height:100vh;overflow:auto}
+  .brand{padding:16px 18px;border-bottom:1px solid #0c3231;display:flex;align-items:center;gap:10px}
+  .brand img{height:24px}
+  .brand .pmx{font-weight:800;color:#fff;font-size:18px;border-left:1px solid #2a5c5a;padding-left:10px}
+  .brand .pmx span{color:var(--mint)}
+  .nav a{display:flex;align-items:center;gap:10px;padding:11px 18px;color:#cbd5e1;cursor:pointer;font-size:13px;border-left:3px solid transparent}
+  .nav a:hover{background:#0c3231;color:#fff}
+  .nav a.active{background:#0c3231;color:#fff;border-left-color:var(--mint)}
+  .nav .ico{width:16px;text-align:center;color:var(--mint)}
+  .nav .sec{padding:12px 18px 5px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#5c8a87}
+  .main{flex:1;display:flex;flex-direction:column;min-width:0}
+  .top{background:#fff;border-bottom:1px solid var(--line);padding:11px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+  .top h1{font-size:15px}
+  .top .r{display:flex;align-items:center;gap:14px}
+  .bell{position:relative;font-size:16px;cursor:pointer}
+  .bell b{position:absolute;top:-6px;right:-8px;background:var(--red);color:#fff;font-size:10px;border-radius:10px;padding:0 5px}
+  .user{display:flex;align-items:center;gap:8px;font-size:13px}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px}
+  .content{padding:20px 24px;overflow:auto}
+  .flowbar{background:linear-gradient(90deg,#ecfdf5,#f0fdfa);border:1px solid #99f6e4;border-radius:8px;padding:9px 14px;font-size:12px;color:var(--brand);margin-bottom:16px}
+  .grid{display:grid;gap:14px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+  .kpi .n{font-size:23px;font-weight:800;margin-top:4px}
+  .kpi .l{font-size:11.5px;color:var(--muted)}
+  .kpi .tag{font-size:10.5px;padding:2px 7px;border-radius:10px;display:inline-block;margin-top:6px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+  .card h3{font-size:14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{text-align:left;color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;padding:8px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:9px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+  tr:hover td{background:#f8fafc}
+  .pill{font-size:10.5px;padding:3px 8px;border-radius:11px;font-weight:600;white-space:nowrap;display:inline-block}
+  .p-blue{background:#dbeafe;color:#1e40af}.p-teal{background:#ccfbf1;color:#0f766e}
+  .p-amber{background:#fef3c7;color:#92400e}.p-red{background:#fee2e2;color:#991b1b}
+  .p-green{background:#dcfce7;color:#166534}.p-gray{background:#e2e8f0;color:#475569}
+  .prodtag{font-size:10px;background:#f0fdfa;color:#0f766e;border:1px solid #99f6e4;border-radius:5px;padding:1px 6px;margin:1px 2px 1px 0;display:inline-block}
+  .btn{background:var(--blue);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:12.5px;cursor:pointer;font-weight:600}
+  .btn.ghost{background:#fff;color:#0f172a;border:1px solid var(--line)}
+  .btn.green{background:var(--green)}.btn.amber{background:var(--amber)}
+  .btn.sm{padding:5px 10px;font-size:11.5px}
+  .inp,select.inp{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;font-family:inherit;background:#fff}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .chip{padding:6px 12px;border-radius:18px;background:#f1f5f9;color:var(--muted);cursor:pointer;font-size:12px;border:1px solid transparent}
+  .chip.on{background:var(--brand);color:#fff;font-weight:600}
+  .screen{display:none}.screen.on{display:block}
+  .two{grid-template-columns:1.5fr 1fr}
+  .three{grid-template-columns:repeat(3,1fr)}
+  .k6{grid-template-columns:repeat(6,1fr)}
+  .k4{grid-template-columns:repeat(4,1fr)}
+  .sub{color:var(--muted);font-size:12px}
+  .hint{font-size:11px;color:var(--muted)}
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px;flex-wrap:wrap}
+  .tabs a{padding:8px 13px;font-size:12.5px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent}
+  .tabs a.on{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+  .tabpane{display:none}.tabpane.on{display:block}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:8px 14px;font-size:12.5px}
+  .kv .k{color:var(--muted)}
+  .alist .it{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid #f1f5f9}
+  .dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+  .alist .t{font-size:12.5px}.alist .s{font-size:11px;color:var(--muted)}
+  .scope{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 14px;font-size:12px}
+  .scope label{display:flex;align-items:center;gap:6px;padding:4px 0}
+  .grpbox{border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+  .grpbox h4{font-size:12px;color:var(--brand);margin-bottom:8px}
+  .kan{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .col{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:9px;min-height:300px}
+  .col h4{font-size:11.5px;margin-bottom:9px;display:flex;justify-content:space-between;color:var(--muted)}
+  .col h4 b{background:#fff;border:1px solid var(--line);border-radius:9px;padding:0 6px}
+  .kcard{background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px;margin-bottom:8px;font-size:11.5px;cursor:grab}
+  .kcard .code{font-size:10px;color:var(--blue);font-weight:700}
+  .kcard .nm{margin:3px 0;font-weight:600}
+  .col.dragover{outline:2px dashed var(--teal);background:#ecfdf5}
+  .docbadge{display:inline-block;margin-top:5px;font-size:9.5px;font-weight:600;background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:5px;padding:1px 5px}
+  .bars{display:flex;gap:16px;align-items:flex-end;height:140px;padding:18px 6px 0}
+  .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .bar .fill{width:55%;min-height:4px;background:linear-gradient(var(--teal),var(--brand));border-radius:5px 5px 0 0}
+  .bar span{margin-top:6px;font-size:11px;color:var(--muted)}
+  .bar b{margin-bottom:4px;font-size:11.5px;color:var(--brand)}
+  .banner{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:9px 13px;font-size:12px;color:#1e40af;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><img src="data:image/webp;base64,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" alt="bedrock"><div class="pmx">PM<span>Ex</span></div></div>
+    <nav class="nav">
+      <div class="sec">มอนิเตอร์</div>
+      <a data-s="dash" class="active"><span class="ico">▚</span> Dashboard</a>
+      <a data-s="pipeline"><span class="ico">◔</span> งานกำลังจะเข้า</a>
+      <a data-s="projects"><span class="ico">▤</span> ทะเบียนงาน</a>
+      <a data-s="customers"><span class="ico">◑</span> ลูกค้า (อปท.)</a>
+      <div class="sec">ดำเนินงาน</div>
+      <a data-s="handover"><span class="ico">✔</span> รับงาน / Handover</a>
+      <a data-s="board"><span class="ico">▦</span> Implementation</a>
+      <a data-s="detail"><span class="ico">▧</span> รายละเอียดงาน</a>
+      <a data-s="docs"><span class="ico">▤</span> เอกสาร</a>
+      <a data-s="ops"><span class="ico">◆</span> Operation</a>
+      <a data-s="renewal"><span class="ico">⏰</span> Renewal & Alerts</a>
+      <div class="sec">อื่นๆ</div>
+      <a data-s="reports"><span class="ico">▥</span> รายงาน</a>
+      <a data-s="roles"><span class="ico">◫</span> Users & Roles</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <h1 id="ttl">Dashboard (Monitor)</h1>
+      <div class="r">
+        <div class="bell" onclick="go('dash')">🔔<b>6</b></div>
+        <div class="user"><div class="avatar">IS</div>Isravan · PMO</div>
+      </div>
+    </header>
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section class="screen on" id="dash">
+        <div class="flowbar">มุมมองของ Isravan (control · manage · monitor · assign) — เห็นงานตั้งแต่ BD แจ้งล่วงหน้า จนถึงส่งมอบและต่อสัญญา</div>
+        <div class="grid k6">
+          <div class="kpi" style="cursor:pointer" onclick="go('pipeline')"><div class="l">งานกำลังจะเข้า</div><div class="n" style="color:var(--amber)" id="k-pipe">3</div><span class="tag p-amber">เตรียมตัว</span></div>
+          <div class="kpi" style="cursor:pointer" onclick="go('projects')"><div class="l">รอมอบหมาย PMEx</div><div class="n" style="color:var(--red)" id="k-assign">2</div><span class="tag p-red">assign</span></div>
+          <div class="kpi"><div class="l">กำลังดำเนินงาน</div><div class="n" id="k-active">4</div><span class="tag p-blue">Implement</span></div>
+          <div class="kpi"><div class="l">งานล่าช้า</div><div class="n" style="color:var(--red)">2</div><span class="tag p-red">ด่วน</span></div>
+          <div class="kpi"><div class="l">ใกล้หมดสัญญา (90 วัน)</div><div class="n" style="color:var(--teal)">3</div><span class="tag p-teal">renew</span></div>
+          <div class="kpi"><div class="l">Booked Revenue ปีนี้</div><div class="n">฿32.4M</div><span class="tag p-gray">YTD</span></div>
+        </div>
+
+        <div class="grid three" style="margin-top:14px">
+          <div class="kpi"><div class="l">เรียกเก็บแล้ว (Billed)</div><div class="n" style="font-size:20px">฿24.8M</div><span class="tag p-blue">การเงิน · PMO อัปเดต</span></div>
+          <div class="kpi"><div class="l">เก็บเงินได้จริง (YTD)</div><div class="n" style="font-size:20px;color:var(--green)">฿21.6M</div><span class="tag p-green">collected</span></div>
+          <div class="kpi"><div class="l">ค้างชำระ</div><div class="n" style="font-size:20px;color:var(--red)">฿3.2M</div><span class="tag p-red">overdue → BD ตาม</span></div>
+        </div>
+
+        <div class="grid two" style="margin-top:14px">
+          <div class="card">
+            <h3>งานที่ต้องรีบดำเนินการ <a class="btn ghost sm" onclick="go('projects')">ดูทั้งหมด</a></h3>
+            <table><thead><tr><th>ชื่อโครงการ</th><th>ลูกค้า</th><th>สถานะ PMEx</th><th>กำหนดส่ง</th><th>BD</th><th>PMEx</th></tr></thead>
+            <tbody>
+              <tr onclick="go('detail')" style="cursor:pointer"><td>Smart Tax + IoT โคราช</td><td>ทน.นครราชสีมา</td><td><span class="pill p-amber">รอ UAT</span></td><td>10 ก.ค.</td><td>รักตภา</td><td>สาวินี</td></tr>
+              <tr><td>เช่าใช้ CDDP สะเดา</td><td>ทม.สะเดา</td><td><span class="pill p-red">ล่าช้า</span></td><td>5 ก.ค.</td><td>Pingping</td><td>Nut</td></tr>
+              <tr><td>Nan Disaster Risk</td><td>อบจ.น่าน</td><td><span class="pill p-amber">รอรับงาน</span></td><td>–</td><td>Shane</td><td style="color:var(--red)">ยังไม่มอบหมาย</td></tr>
+            </tbody></table>
+          </div>
+          <div class="card">
+            <h3>ศูนย์แจ้งเตือน <label class="hint" style="font-weight:400;display:flex;align-items:center;gap:6px"><input type="checkbox" checked> ส่งอีเมลแจ้งเตือนด้วย</label></h3>
+            <div class="hint" style="margin:-4px 0 10px">แจ้งเตือนทั้งในระบบและอีเมล — ไม่ต้องเข้ามาเช็คเองทุกวัน</div>
+            <div class="alist">
+              <div class="it"><div class="dot" style="background:var(--amber)"></div><div><div class="t">งานใหม่จาก BD กำลังจะเข้า</div><div class="s">อบจ.พัทลุง · คาดว่าเซ็น ก.ค. · OSS</div></div></div>
+              <div class="it"><div class="dot" style="background:var(--red)"></div><div><div class="t">เซ็นสัญญาแล้วยังไม่มอบหมาย PMEx</div><div class="s">อบจ.น่าน · Nan Disaster</div></div></div>
+              <div class="it"><div class="dot" style="background:var(--green)"></div><div><div class="t">เอกสารเปลี่ยนเป็น Final → แจ้ง PMEx</div><div class="s">โคราช · สัญญาจ้าง</div></div></div>
+              <div class="it"><div class="dot" style="background:var(--red)"></div><div><div class="t">เงินค้างชำระเกินกำหนด → แจ้ง BD ติดตาม</div><div class="s">ทน.นครราชสีมา · งวดที่ 2 ฿720,000</div></div></div>
+              <div class="it"><div class="dot" style="background:var(--teal)"></div><div><div class="t">สัญญาใกล้หมดอายุ 90 วัน</div><div class="s">ทต.บางหญ้าแพรก · CDDP</div></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PIPELINE (Upcoming / Heads-up) -->
+      <section class="screen" id="pipeline">
+        <div class="flowbar">งานที่ BD "แจ้งล่วงหน้า" ว่ากำลังจะเข้า (ก่อนเซ็นสัญญา) เพื่อให้ PMEx เตรียมตัว — มาจากเมลอัพเดต อปท. ที่เตรียมเซ็นสัญญา ตอนนี้กรอกเข้าระบบแทนการส่งเมล</div>
+        <div class="banner" style="background:#ecfdf5;border-color:#99f6e4;color:var(--brand)">✅ เปลี่ยนจาก "BD ส่งเมล → PMEx เปิดเมลแล้วก๊อปลง Excel" มาเป็น <b>BD คีย์เข้าระบบที่เดียว</b> → รวมศูนย์ทันที ออกรายงาน/แจ้งเตือนได้เอง ไม่ต้องเปิดเมลตาม</div>
+        <div class="card" id="intakeForm" style="display:none;margin-bottom:14px;background:#f8fafc">
+          <h3>แจ้ง / สร้างงานใหม่ (BD·Sales คีย์แทนการส่งเมล)</h3>
+          <div class="grpbox"><h4>ข้อมูลโครงการ</h4>
+            <div class="grid three" style="gap:12px">
+              <div style="grid-column:1/3"><label class="hint">ชื่อโครงการ *</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="เช่น เช่าใช้ระบบ E-saraban ทต.มะเขือแจ้"></div>
+              <div><label class="hint">Project Code (ไม่บังคับ)</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="ตัวเลข — PMEx เจนตอนรับงาน"></div>
+              <div><label class="hint">ลูกค้า / อปท. *</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="เลือกจาก master หรือพิมพ์"></div>
+              <div><label class="hint">จังหวัด</label><br><input class="inp" style="width:100%;margin-top:4px"></div>
+              <div><label class="hint">BD·Sales เจ้าของงาน *</label><br><input class="inp" style="width:100%;margin-top:4px" value="ธนวิทย์"></div>
+              <div><label class="hint">เลขที่สัญญา *</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="เช่น CT-2026-0619"></div>
+              <div><label class="hint">ประเภทสัญญา</label><br><select class="inp" style="width:100%;margin-top:4px"><option>สัญญาจ้าง</option><option>สัญญาเช่า</option><option>PO</option><option>ทดลองใช้</option></select></div>
+              <div><label class="hint">สถานะงานขาย</label><br><select class="inp" style="width:100%;margin-top:4px"><option>รอโอกาสขาย</option><option>เสนอราคาแล้ว</option><option>ปิดการขายแล้ว</option><option>รอสัญญา</option><option>เซ็นสัญญาแล้ว</option></select></div>
+              <div><label class="hint">วันเริ่มสัญญา *</label><br><input class="inp" type="date" style="width:100%;margin-top:4px"></div>
+              <div><label class="hint">วันสิ้นสุดสัญญา *</label><br><input class="inp" type="date" style="width:100%;margin-top:4px"></div>
+              <div><label class="hint">มูลค่างาน</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="฿"></div>
+              <div style="grid-column:1/4"><label class="hint">Product / ขอบเขต (เลือกได้หลายรายการใน 1 สัญญา)</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="เช่น OSS, Line OA, Smart Tax, CCTV, กระดาษ"></div>
+            </div>
+          </div>
+          <div class="grpbox"><h4>ผู้ติดต่อลูกค้า</h4>
+            <div class="grid k4" style="gap:12px">
+              <div><label class="hint">ชื่อผู้ติดต่อ</label><br><input class="inp" style="width:100%;margin-top:4px"></div>
+              <div><label class="hint">เบอร์โทร</label><br><input class="inp" style="width:100%;margin-top:4px"></div>
+              <div><label class="hint">อีเมล</label><br><input class="inp" style="width:100%;margin-top:4px"></div>
+              <div><label class="hint">Line ID</label><br><input class="inp" style="width:100%;margin-top:4px"></div>
+            </div>
+          </div>
+          <div class="grpbox" style="border-color:#fca5a5;background:#fff5f5"><h4 style="color:var(--red)">เอกสารที่ต้องแนบ (บังคับ — Draft ก็ได้ · วางลิงก์ ไม่อัปโหลด)</h4>
+            <div class="grid three" style="gap:12px">
+              <div><label class="hint">สัญญา *</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="วางลิงก์ Share Folder"></div>
+              <div><label class="hint">TOR *</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="วางลิงก์ Share Folder"></div>
+              <div><label class="hint">Costsheet *</label><br><input class="inp" style="width:100%;margin-top:4px" placeholder="วางลิงก์ Share Folder"></div>
+            </div>
+            <div class="hint" style="margin-top:8px">* ต้องแนบครบทั้ง 3 ฉบับก่อนกด Handover — สถานะ Draft ยอมรับได้ ระบบจะคง badge "รอ Final" ไว้จนกว่าจะครบ</div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:12px">
+            <button class="btn ghost" onclick="toggleIntake()">ยกเลิก</button>
+            <button class="btn green" onclick="toggleIntake();alert('บันทึกเข้าระบบแล้ว — ปรากฏในทะเบียนงาน/งานกำลังจะเข้า ไม่ต้องส่งเมล')">บันทึกเข้าระบบ</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>สรุปแนวโน้ม <button class="btn sm" onclick="toggleIntake()">+ แจ้งงานที่กำลังจะเข้า</button></h3>
+          <div class="grid k4">
+            <div class="kpi"><div class="l">คาดว่าเซ็นเดือนนี้</div><div class="n" style="color:var(--amber)">3</div></div>
+            <div class="kpi"><div class="l">มูลค่ารวมคาดการณ์</div><div class="n">฿2.1M</div></div>
+            <div class="kpi"><div class="l">ครอบคลุมจังหวัด</div><div class="n">3</div></div>
+            <div class="kpi"><div class="l">ต้องเตรียมสำรวจ</div><div class="n">2</div><span class="tag p-amber">บินโดรน/หมุด</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>รายการงานที่กำลังจะเข้า</h3>
+          <table><thead><tr><th>ชื่อโครงการ / ลูกค้า</th><th>จังหวัด</th><th>Product ที่คาดว่าจะได้</th><th>สถานะงานขาย</th><th>คาดว่าเซ็นสัญญา</th><th>มูลค่าคาดการณ์</th><th>BD·Sales</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><b>OSS + Line OA พัทลุง</b><div class="hint">อบจ.พัทลุง</div></td><td>พัทลุง</td><td><span class="prodtag">OSS</span><span class="prodtag">Line OA</span></td><td><span class="pill p-blue">เสนอราคาแล้ว</span></td><td><span class="pill p-amber">ก.ค. 69</span></td><td>฿640,000</td><td>ธนวิทย์</td><td><button class="btn green sm" onclick="alert('แปลงเป็นโครงการ → เข้าทะเบียนงาน')">รับเข้าระบบ</button></td></tr>
+            <tr><td><b>CDP โครงสร้างพื้นฐาน สมุทรสาคร</b><div class="hint">ทน.สมุทรสาคร</div></td><td>สมุทรสาคร</td><td><span class="prodtag">CDP</span><span class="prodtag">สาธารณสุข</span><span class="prodtag">สิ่งแวดล้อม</span></td><td><span class="pill p-amber">ปิดการขายแล้ว</span></td><td><span class="pill p-amber">10 ก.ค. 69</span></td><td>฿890,000</td><td>Pingping</td><td><button class="btn green sm" onclick="alert('แปลงเป็นโครงการ → เข้าทะเบียนงาน')">รับเข้าระบบ</button></td></tr>
+            <tr><td><b>เพิ่มประสิทธิภาพจัดเก็บภาษี บ้านบางม่วง</b><div class="hint">ทต.บ้านบางม่วง</div></td><td>นนทบุรี</td><td><span class="prodtag">Smart Tax</span><span class="prodtag">แผนที่ภาษี</span></td><td><span class="pill p-amber">รอสัญญา</span></td><td><span class="pill p-amber">ก.ค. 69</span></td><td>฿1,150,000</td><td>ธนวิทย์</td><td><button class="btn green sm" onclick="alert('แปลงเป็นโครงการ → เข้าทะเบียนงาน')">รับเข้าระบบ</button></td></tr>
+          </tbody></table>
+          <div class="hint" style="margin-top:10px">BD·Sales คีย์ได้ตั้งแต่ "รอโอกาสขาย" · เมื่อเซ็นสัญญาแล้ว กด "รับเข้าระบบ" งานจะย้ายไปทะเบียนงานเพื่อมอบหมาย PMEx และทำ Handover</div>
+        </div>
+      </section>
+
+      <!-- PROJECTS (ทะเบียนงาน) -->
+      <section class="screen" id="projects">
+        <div class="flowbar">ทะเบียนงานทั้งหมด — คีย์หลักคือ "ชื่อโครงการ" (Project Code ไม่บังคับ) · 1 สัญญา = 1 โครงการ (หลาย product ได้) · กรองตามลูกค้า/จังหวัด/สถานะ/ผู้ดูแล และมอบหมาย PMEx ได้</div>
+        <div class="card">
+          <div class="filters">
+            <input class="inp" id="pjSearch" placeholder="🔎 ค้นหาชื่อโครงการ / ลูกค้า" oninput="renderProjects()" style="min-width:220px">
+            <select class="inp" id="pjProv" onchange="renderProjects()"><option value="">ทุกจังหวัด</option></select>
+            <select class="inp" id="pjPmex" onchange="renderProjects()"><option value="">ผู้ดูแล PMEx: ทั้งหมด</option><option value="__none">ยังไม่มอบหมาย</option></select>
+            <select class="inp" id="pjStat" onchange="renderProjects()"><option value="">สถานะ PMEx: ทั้งหมด</option></select>
+          </div>
+          <div class="filters" style="margin-bottom:12px">
+            <span class="chip on" data-stage="all" onclick="pjStage(this)">ทั้งหมด</span>
+            <span class="chip" data-stage="pipeline" onclick="pjStage(this)">กำลังจะเข้า</span>
+            <span class="chip" data-stage="active" onclick="pjStage(this)">กำลังดำเนินงาน</span>
+            <span class="chip" data-stage="ops" onclick="pjStage(this)">ส่งมอบ/Operation</span>
+          </div>
+          <table><thead><tr><th>ชื่อโครงการ</th><th>ลูกค้า</th><th>จว.</th><th>Product</th><th>สัญญา</th><th>มูลค่า</th><th>สถานะ BD</th><th>สถานะ PMEx</th><th>BD</th><th>PMEx (มอบหมาย)</th></tr></thead>
+          <tbody id="pjBody"></tbody></table>
+          <div class="hint" style="margin-top:10px" id="pjCount"></div>
+        </div>
+      </section>
+
+      <!-- CUSTOMERS (Customer 360) -->
+      <section class="screen" id="customers">
+        <div class="flowbar">มุมมองรายลูกค้า (อปท.) — 1 ลูกค้ามีได้หลายโครงการ/สัญญา/ต่ออายุ · เลือกลูกค้าเพื่อดูงานทั้งหมด</div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>เลือกลูกค้า <select class="inp" id="custSel" onchange="renderCustomer()" style="min-width:260px"></select></h3>
+          <div class="grid k4" id="custKpi"></div>
+        </div>
+        <div class="card">
+          <h3>โครงการทั้งหมดของลูกค้ารายนี้</h3>
+          <table><thead><tr><th>ชื่อโครงการ</th><th>Product</th><th>สัญญา</th><th>มูลค่า</th><th>สถานะ PMEx</th><th>สิ้นสุดใช้งาน</th><th>PMEx</th></tr></thead>
+          <tbody id="custBody"></tbody></table>
+        </div>
+      </section>
+
+      <!-- HANDOVER -->
+      <section class="screen" id="handover">
+        <div class="flowbar">ฟอร์ม Handover ตามเอกสารจริง (BED-BD-PD-001) · BD กรอก scope งานให้ครบ → PMEx ยืนยัน "อธิบายครบ/เอกสารครบ" แล้วรับงาน (Accept) หรือส่งกลับ · ผู้รับผิดชอบมอบหมายจาก "ทะเบียนงาน" ที่เดียว</div>
+        <div class="card" style="margin-bottom:14px">
+          <h3>กล่องงานรอรับ (Handover Inbox) <span class="pill p-amber" id="hoCount">0</span></h3>
+          <table><thead><tr><th>ชื่อโครงการ</th><th>ลูกค้า</th><th>BD·Sales</th><th>ผู้รับผิดชอบ PMEx</th><th>Product</th><th>เอกสาร</th><th></th></tr></thead>
+          <tbody id="hoQueue"></tbody></table>
+          <div class="hint" style="margin-top:10px">มุมมอง PMEx เห็นเฉพาะงานที่มอบหมายให้ตัวเอง · PMO (Isravan) เห็นทั้งหมด — กด "เปิดดู" เพื่ออ่าน Handover Document แล้วกด Accept / Send Back</div>
+        </div>
+        <div class="grid two" id="hoDetail">
+          <div class="card">
+            <h3>Handover Document — ทต.มะเขือแจ้ (E-saraban)</h3>
+            <div class="kv" style="margin-bottom:12px">
+              <div class="k">ชื่ออปท.</div><div>เทศบาลตำบลมะเขือแจ้ · จ.ลำพูน</div>
+              <div class="k">ชื่อโครงการ</div><div>เช่าใช้ระบบ E-saraban</div>
+              <div class="k">Key Stakeholders</div><div>นางเบญจกุล แผลงฤทธิ์ · 086-3443746</div>
+              <div class="k">ระยะเวลา</div><div>1 ก.ค. 69 – 30 ก.ย. 69 (3 เดือน)</div>
+              <div class="k">BD ที่ดูแล</div><div>Korakot (BD)</div>
+              <div class="k">Kickoff (ลูกค้า)</div><div>7 ก.ค. 69 เวลา 17:00</div>
+            </div>
+            <div class="grpbox">
+              <h4>เอกสารบังคับ (แนบลิงก์ · Draft ก็ได้)</h4>
+              <div class="scope" style="grid-template-columns:repeat(3,1fr)">
+                <label><input type="checkbox" checked> สัญญา * <span class="pill p-amber">รอเซ็น</span></label>
+                <label><input type="checkbox" checked> TOR * <span class="pill p-amber">รอเซ็น</span></label>
+                <label><input type="checkbox" checked> Costsheet * <span class="pill p-green">Final</span></label>
+              </div>
+              <div class="hint" style="margin-top:8px">* บังคับครบ 3 ฉบับก่อน Handover · Briefsheet/อื่นๆ แนบเพิ่มได้</div>
+            </div>
+            <div class="grpbox">
+              <h4>งวดงาน</h4>
+              <div class="kv"><div class="k">จำนวนงวด</div><div>1 งวด (100%)</div><div class="k">วันส่งมอบ</div><div>30 ก.ย. 69</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>ยืนยันความเข้าใจ (Acceptance)</h3>
+            <div class="grpbox">
+              <label style="display:flex;gap:8px;padding:6px 0"><input type="checkbox" checked> BC อธิบายงานครบถ้วน</label>
+              <label style="display:flex;gap:8px;padding:6px 0"><input type="checkbox"> BC ส่งเอกสารครบถ้วน (สัญญายังรอเซ็น)</label>
+            </div>
+            <div class="fld" style="margin:10px 0">
+              <label class="hint">ผู้รับผิดชอบ PMEx (มอบหมายจากทะเบียนงาน)</label>
+              <div id="hoOwner" style="margin-top:5px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:#f8fafc">—</div>
+              <div class="hint" style="margin-top:5px">มอบหมายที่ <a style="color:var(--blue);cursor:pointer" onclick="go('projects')">ทะเบียนงาน</a> ที่เดียว · ตรงนี้แสดงผลอย่างเดียวเพื่อให้ข้อมูลตรงกัน</div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px">
+              <button class="btn green" id="hoAccept" style="flex:1" onclick="acceptHandover()">✔ รับงาน (Accept)</button>
+              <button class="btn ghost" style="flex:1;color:var(--red);border-color:#fca5a5" onclick="alert('ส่งกลับให้ BD แก้ไข')">↩ Send Back</button>
+            </div>
+            <div class="banner" style="margin-top:14px;background:#fffbeb;border-color:#fde68a;color:#92400e">⚠ สัญญายังรอเซ็น — รับงานได้ (Parallel) แต่ระบบจะคง badge "เอกสารไม่ Final" ไว้จนกว่าจะครบ</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <h3>งานเกี่ยวกับ (Scope of Work) — ตามฟอร์มจริง</h3>
+          <div class="grpbox"><h4>สำรวจ</h4>
+            <div class="scope"><label><input type="checkbox"> หมุดบ้าน</label><label><input type="checkbox"> MMS</label><label><input type="checkbox"> บินโดรน</label><label><input type="checkbox"> ค่าระดับ+หน้าตัดลำน้ำ</label><label><input type="checkbox"> แผนที่ภาษี</label></div>
+          </div>
+          <div class="grpbox"><h4>แพลตฟอร์ม / ระบบ</h4>
+            <div class="scope"><label><input type="checkbox" checked> E-saraban</label><label><input type="checkbox"> CDDP</label><label><input type="checkbox"> Smart Utility</label><label><input type="checkbox"> Smart Tax</label><label><input type="checkbox"> OSS</label><label><input type="checkbox"> DMS</label><label><input type="checkbox"> E-HR</label><label><input type="checkbox"> SBP</label><label><input type="checkbox"> SAM</label><label><input type="checkbox"> SBL</label></div>
+          </div>
+          <div class="grpbox"><h4>อุปกรณ์ IoT / บริการ</h4>
+            <div class="scope"><label><input type="checkbox"> Handheld/Printer</label><label><input type="checkbox"> CCTV</label><label><input type="checkbox"> Smart Pole</label><label><input type="checkbox"> GPS</label><label><input type="checkbox"> War Room</label><label><input type="checkbox"> Carekit</label><label><input type="checkbox"> มิเตอร์+เซ็นเซอร์</label><label><input type="checkbox"> LCD Monitor</label><label><input type="checkbox"> กระดาษใบเสร็จ</label><label><input type="checkbox"> คีย์ทะเบียนราษฎร์</label><label><input type="checkbox"> ซิมการ์ด</label></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- IMPLEMENTATION BOARD -->
+      <section class="screen" id="board">
+        <div class="flowbar">ลากการ์ดข้ามคอลัมน์เพื่อเปลี่ยนสถานะ PMEx · การ์ดที่มี ⚠ = เอกสารยังไม่ Final</div>
+        <div class="card">
+          <h3>Implementation Board</h3>
+          <div class="kan">
+            <div class="col" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropCard(event)"><h4>รออุปกรณ์ <b class="cnt">1</b></h4><div class="coldrop">
+              <div class="kcard" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="code">ทต.ขนวน</div><div class="nm">CDDP ขอนแก่น</div><span class="pill p-blue">Kik</span></div>
+            </div></div>
+            <div class="col" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropCard(event)"><h4>กำลัง Implement <b class="cnt">2</b></h4><div class="coldrop">
+              <div class="kcard" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="code">ทต.มะเขือแจ้</div><div class="nm">E-saraban</div><span class="pill p-blue">กฤษณะ</span><div class="docbadge">⚠ เอกสารไม่ Final</div></div>
+              <div class="kcard" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="code">ทม.กระทุ่มแบน</div><div class="nm">SU + CDP</div><span class="pill p-blue">ประยุทธ์</span></div>
+            </div></div>
+            <div class="col" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropCard(event)"><h4>รอ UAT <b class="cnt">1</b></h4><div class="coldrop">
+              <div class="kcard" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" onclick="go('detail')" style="border:2px solid var(--amber)"><div class="code">ทน.นครราชสีมา</div><div class="nm">Smart Tax + IoT (8 products)</div><span class="pill p-blue">สาวินี</span><div class="docbadge">⚠ เอกสารไม่ Final</div></div>
+            </div></div>
+            <div class="col" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropCard(event)"><h4>ส่งมอบแล้ว <b class="cnt">1</b></h4><div class="coldrop">
+              <div class="kcard" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="code">ทม.สะเดา</div><div class="nm">CDDP</div><span class="pill p-blue">Nut</span></div>
+            </div></div>
+            <div class="col" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="dropCard(event)"><h4>ส่งต่อ Operation <b class="cnt">1</b></h4><div class="coldrop">
+              <div class="kcard" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)"><div class="code">ทต.บางหญ้าแพรก</div><div class="nm">CDDP</div><span class="pill p-blue">วิชัย</span></div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROJECT DETAIL -->
+      <section class="screen" id="detail">
+        <div class="flowbar">รายละเอียดงานเดียว (Single Source of Truth) — ตัวอย่างงานหลาย product ใน 1 สัญญา</div>
+        <div class="card">
+          <h3 style="align-items:flex-start"><div><span style="font-size:15px">Smart Tax + IoT · เทศบาลนครนครราชสีมา</span><div class="sub">Project Code: PMEX-2026-014 (optional) · สัญญาจ้าง · มูลค่า ฿2,400,000</div></div>
+            <div style="text-align:right"><span class="pill p-amber">รอ UAT</span><div style="margin-top:5px"><span class="pill p-teal">✓ Handover แล้ว</span></div></div>
+          </h3>
+          <div class="tabs">
+            <a class="on" data-t="d-ov">ข้อมูล</a><a data-t="d-scope">Scope งาน (8)</a><a data-t="d-doc">เอกสาร</a><a data-t="d-as">อุปกรณ์</a><a data-t="d-fin">การเงิน</a><a data-t="d-tl">Timeline</a>
+          </div>
+          <div class="tabpane on" id="d-ov"><div class="kv">
+            <div class="k">ลูกค้า / จังหวัด</div><div>เทศบาลนครนครราชสีมา · นครราชสีมา (อีสาน)</div>
+            <div class="k">ประเภทลูกค้า / Deal</div><div>Sale site · New</div>
+            <div class="k">Solution / Partner</div><div>CDDP + Smart Tax · Bedrock</div>
+            <div class="k">BD / PMEx</div><div>รักตภา · <b>สาวินี</b></div>
+            <div class="k">เลขที่สัญญา</div><div>CT-2026-0619</div>
+            <div class="k">Kickoff BD→PMEx</div><div>25 มิ.ย. 69</div>
+            <div class="k">Kickoff ลูกค้า</div><div>1 ก.ค. 69</div>
+            <div class="k">Plan / Actual ส่งมอบ</div><div>10 ก.ค. 69 / <span style="color:var(--amber)">ยังไม่ส่ง</span></div>
+            <div class="k">ระยะเวลาใช้งาน</div><div>10 ก.ค. 69 – 9 ก.ค. 70</div>
+            <div class="k">Booked Revenue (ปีนี้/ปีหน้า)</div><div>฿2,400,000 / –</div>
+          </div></div>
+          <div class="tabpane" id="d-scope">
+            <div class="hint" style="margin-bottom:8px">สัญญาเดียวมี 8 products — เก็บเป็น scope ในโครงการเดียว (ไม่แยก project)</div>
+            <span class="prodtag">Smart Tax</span><span class="prodtag">OSS (Line OA)</span><span class="prodtag">CCTV</span><span class="prodtag">Smart Pole</span><span class="prodtag">Handheld Printer</span><span class="prodtag">กระดาษใบเสร็จ</span><span class="prodtag">แผนที่ภาษี</span><span class="prodtag">GPS</span>
+            <div class="grpbox" style="margin-top:12px"><h4>PO เสริม / Add-on ใต้สัญญานี้</h4>
+              <div class="hint">ขายกระดาษเพิ่ม PO-2026-041 (ใต้สัญญาเดิม ไม่สร้างโครงการใหม่ · Booked Revenue เพิ่มขึ้น)</div>
+              <div style="margin-top:8px"><button class="btn sm" onclick="alert('เพิ่ม Product/scope + มูลค่าที่เพิ่ม แล้วแนบลิงก์ PO ที่แท็บเอกสาร → ระบบยิงแจ้งเตือน PMEx ผู้ดูแลให้จัดหาอุปกรณ์ลอตใหม่')">+ เพิ่ม Product / PO (Add-on)</button></div>
+            </div>
+          </div>
+          <div class="tabpane" id="d-doc">
+            <div class="hint" style="margin-bottom:8px">BD/Sales วางลิงก์ + สถานะ · ได้ฉบับ Final เมื่อไหร่ มาเปลี่ยนสถานะ/แก้ลิงก์ที่นี่ · แนบเอกสารเพิ่มได้</div>
+            <div id="docStatusBar" style="margin-bottom:10px"></div>
+            <table><thead><tr><th>เอกสาร</th><th>สถานะ</th><th>ลิงก์</th><th>อัปเดตล่าสุด</th><th>เปลี่ยนสถานะ</th></tr></thead>
+            <tbody id="docBody"></tbody></table>
+            <div class="grpbox" style="margin-top:12px"><h4>แนบเอกสารเพิ่ม</h4>
+              <div class="grid three" style="gap:10px">
+                <div><label class="hint">ชื่อเอกสาร</label><br><input id="ndName" class="inp" style="width:100%;margin-top:4px" placeholder="เช่น ใบส่งมอบงวดงาน / ภาคผนวก"></div>
+                <div><label class="hint">ลิงก์ (Share Folder)</label><br><input id="ndLink" class="inp" style="width:100%;margin-top:4px" placeholder="วาง URL"></div>
+                <div><label class="hint">สถานะ</label><br><select id="ndStat" class="inp" style="width:100%;margin-top:4px"><option>Draft</option><option>รอเซ็น</option><option>Final</option></select></div>
+              </div>
+              <div style="text-align:right;margin-top:10px"><button class="btn sm" onclick="addDoc()">+ เพิ่มเอกสาร</button></div>
+            </div>
+          </div>
+          <div class="tabpane" id="d-as">
+            <div class="hint">อุปกรณ์ผูกกับโครงการ · เพิ่มลอตใหม่ได้ (กรณีขายเพิ่ม/Add-on) พร้อมวันหมดประกันแยกลอต</div>
+            <table style="margin-top:8px"><thead><tr><th>อุปกรณ์</th><th>Serial / ลอต</th><th>จำนวน</th><th>หมดประกัน</th><th>สถานะ</th></tr></thead>
+            <tbody id="asBody"></tbody></table>
+            <div class="grpbox" style="margin-top:12px"><h4>เพิ่มอุปกรณ์ (ลอตใหม่ / Add-on)</h4>
+              <div class="grid k4" style="gap:10px">
+                <div><label class="hint">อุปกรณ์</label><br><input id="asName" class="inp" style="width:100%;margin-top:4px" placeholder="เช่น Handheld Printer"></div>
+                <div><label class="hint">Serial / ลอต</label><br><input id="asSn" class="inp" style="width:100%;margin-top:4px" placeholder="เช่น LOT-2026-07"></div>
+                <div><label class="hint">จำนวน</label><br><input id="asQty" class="inp" style="width:100%;margin-top:4px" placeholder="เช่น 4"></div>
+                <div><label class="hint">วันหมดประกัน</label><br><input id="asWar" class="inp" type="date" style="width:100%;margin-top:4px"></div>
+              </div>
+              <div style="text-align:right;margin-top:10px"><button class="btn sm" onclick="addAsset()">+ เพิ่มอุปกรณ์</button></div>
+            </div>
+          </div>
+          <div class="tabpane" id="d-fin">
+            <div class="hint" style="margin-bottom:8px">PMO อัปเดตสถานะการเงินสรุปเพื่อรายงานผู้บริหาร (ทีมการเงินภายนอกเป็นผู้เก็บเงินจริง) · แจ้ง BD ให้ตามเมื่อค้างชำระ</div>
+            <div class="grid k4" id="finKpi" style="margin-bottom:12px"></div>
+            <table><thead><tr><th>งวดงาน</th><th>มูลค่า</th><th>กำหนดชำระ</th><th>สถานะการเงิน</th><th>อัปเดต (PMO)</th><th></th></tr></thead>
+            <tbody id="finBody"></tbody></table>
+            <div class="hint" style="margin-top:8px">ประเภทสัญญา: สัญญาจ้าง (+ PO กระดาษ) · มูลค่าสัญญารวม ฿2,400,000 · สถานะนี้ใช้รายงานผู้บริหาร ไม่ใช่ระบบวางบิลจริง</div>
+          </div>
+          <div class="tabpane" id="d-tl"><div class="kv">
+            <div class="k">19 มิ.ย.</div><div>BD แจ้งล่วงหน้า (pipeline)</div>
+            <div class="k">20 มิ.ย.</div><div>เซ็นสัญญา · Handover · มอบหมายสาวินี</div>
+            <div class="k">25 มิ.ย.</div><div>Internal kickoff (BD→PMEx)</div>
+            <div class="k">1 ก.ค.</div><div>Kickoff ลูกค้า + training</div>
+            <div class="k">7 ก.ค.</div><div style="color:var(--amber)">รอ UAT (ปัจจุบัน)</div>
+            <div class="k">10 ก.ค. (แผน)</div><div>ลูกค้าตรวจรับงาน (UAT) → ส่งมอบแล้ว → ส่งต่อ Operation</div>
+          </div></div>
+        </div>
+      </section>
+
+      <!-- DOCS -->
+      <section class="screen" id="docs">
+        <div class="flowbar">เอกสารทุกโครงการที่ยังไม่ Final — BD ตามให้ครบ · ระบบเก็บเฉพาะลิงก์ · เปลี่ยนสถานะเป็น Final หรือแนบเอกสารเพิ่มได้ที่ รายละเอียดงาน › แท็บเอกสาร</div>
+        <div class="card">
+          <h3>เอกสารที่ยังไม่ Final <span class="pill p-amber">6 ฉบับ</span></h3>
+          <table><thead><tr><th>โครงการ</th><th>ลูกค้า</th><th>เอกสาร</th><th>สถานะ</th><th>BD</th><th>PMEx</th></tr></thead><tbody>
+            <tr><td>Smart Tax โคราช</td><td>ทน.นครราชสีมา</td><td>สัญญาจ้าง</td><td><span class="pill p-amber">รอเซ็น</span></td><td>รักตภา</td><td>สาวินี</td></tr>
+            <tr><td>E-saraban มะเขือแจ้</td><td>ทต.มะเขือแจ้</td><td>TOR</td><td><span class="pill p-amber">รอเซ็น</span></td><td>Korakot</td><td>กฤษณะ</td></tr>
+            <tr><td>E-saraban มะเขือแจ้</td><td>ทต.มะเขือแจ้</td><td>สัญญา</td><td><span class="pill p-gray">Draft</span></td><td>Korakot</td><td>กฤษณะ</td></tr>
+            <tr><td>Nan Disaster</td><td>อบจ.น่าน</td><td>สัญญาจ้าง</td><td><span class="pill p-gray">Draft</span></td><td>Shane</td><td style="color:var(--muted)">รอมอบหมาย</td></tr>
+          </tbody></table>
+        </div>
+      </section>
+
+      <!-- OPERATION -->
+      <section class="screen" id="ops">
+        <div class="flowbar">โครงการที่ส่งต่อ Operation แล้ว · Helpdesk เข้าถึงแบบ View-Only ดูข้อมูลประกันอุปกรณ์</div>
+        <div class="banner">🔒 Helpdesk = View-Only · เปลี่ยนสถานะได้เฉพาะทีม Operation · ไม่มีโมดูล Ticketing (renew ดูแลโดยทีม Oil)</div>
+        <div class="grid two">
+          <div class="card">
+            <h3>โครงการในความดูแล Operation</h3>
+            <table><thead><tr><th>โครงการ</th><th>ลูกค้า</th><th>สถานะ</th><th>อุปกรณ์</th><th>สิ้นสุดใช้งาน</th><th>PMEx</th></tr></thead><tbody>
+              <tr><td>CDDP บางหญ้าแพรก</td><td>ทต.บางหญ้าแพรก</td><td><span class="pill p-teal">ใกล้หมดสัญญา</span></td><td><span class="pill p-green">ปกติ</span></td><td>5 ต.ค. 69</td><td>วิชัย</td></tr>
+              <tr><td>CDDP สะเดา</td><td>ทม.สะเดา</td><td><span class="pill p-green">Support อยู่</span></td><td><span class="pill p-green">ปกติ</span></td><td>5 ส.ค. 70</td><td>Nut</td></tr>
+            </tbody></table>
+          </div>
+          <div class="card">
+            <h3>อุปกรณ์ใกล้หมดประกัน <span class="pill p-amber">Helpdesk</span></h3>
+            <table><thead><tr><th>อุปกรณ์</th><th>ลูกค้า</th><th>หมดประกัน</th><th>เหลือ</th></tr></thead><tbody>
+              <tr><td>Smart Pole</td><td>ทต.บางหญ้าแพรก</td><td>20 ก.ค. 69</td><td><span class="pill p-red">12 วัน</span></td></tr>
+              <tr><td>CCTV</td><td>ทม.สะเดา</td><td>22 ก.ย. 69</td><td><span class="pill p-teal">76 วัน</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- RENEWAL & ALERT CENTER -->
+      <section class="screen" id="renewal">
+        <div class="flowbar">ศูนย์ต่อสัญญา & แจ้งเตือน — ระบบคำนวณวันหมดสัญญาล่วงหน้า 90/60/30 วัน แล้ว Escalate ให้ BD·Sales ไปต่อสัญญา (Renew · ใช้ Project Code เดิม)</div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="filters" style="align-items:flex-end">
+            <div><label class="hint">ช่วงเวลา (วันหมดสัญญา)</label><br><span style="display:inline-flex;gap:6px;margin-top:4px"><input class="inp" type="date" value="2026-07-08"><span style="align-self:center">–</span><input class="inp" type="date" value="2026-12-31"></span></div>
+            <div><label class="hint">ลูกค้า / หน่วยงาน</label><br><select class="inp" id="rnCust" onchange="renderRenewal()" style="margin-top:4px;min-width:200px"><option value="">ทั้งหมด</option></select></div>
+            <div><label class="hint">BD·Sales</label><br><select class="inp" id="rnBd" onchange="renderRenewal()" style="margin-top:4px;min-width:160px"><option value="">ทั้งหมด</option></select></div>
+            <div><button class="btn" onclick="renderRenewal()">กรอง</button> <button class="btn ghost" onclick="alert('Export รายงานต่อสัญญา (Excel/PDF)')">Export</button></div>
+          </div>
+          <div class="grid k4" id="rnKpi"></div>
+        </div>
+        <div class="card">
+          <h3>สัญญาที่ใกล้หมดอายุ (เรียงจากใกล้ที่สุด)</h3>
+          <table><thead><tr><th>โครงการ</th><th>ลูกค้า / หน่วยงาน</th><th>วันหมดสัญญา</th><th>เหลือ</th><th>มูลค่า</th><th>BD·Sales</th><th></th></tr></thead>
+          <tbody id="rnBody"></tbody></table>
+          <div class="hint" style="margin-top:10px">Operation เห็นแจ้งเตือน → กด "ส่งต่อ BD" เพื่อ Escalate ให้ไปดำเนินการต่อสัญญา · ระบบแจ้งเตือนทั้งในระบบและอีเมล</div>
+        </div>
+      </section>
+
+      <!-- REPORTS -->
+      <section class="screen" id="reports">
+        <div class="flowbar">ดึงรายงานที่ Isravan ต้องใช้บ่อย — เลือกแล้ว export ได้ (Isravan ย้ำว่าต้อง "ดึง report ได้")</div>
+        <div class="grid three">
+          <div class="card" style="cursor:pointer" onclick="alert('สร้างรายงาน: งานที่ BD ส่งมา ตามช่วงเวลา')"><h3>📥 งานที่รับจาก BD</h3><div class="sub">งานที่ BD ส่งมาแต่ละเดือน แยกจังหวัด/product</div></div>
+          <div class="card" style="cursor:pointer" onclick="alert('สร้างรายงาน: งานใกล้หมดสัญญา')"><h3>⏰ งานใกล้หมดสัญญา</h3><div class="sub">ตามวันสิ้นสุดใช้งาน 90/60/30 วัน เพื่อส่งต่อ Renew</div></div>
+          <div class="card" style="cursor:pointer" onclick="alert('สร้างรายงาน: สถานะการส่งมอบ')"><h3>📊 สถานะส่งมอบ (Plan vs Actual)</h3><div class="sub">งานล่าช้า / on-time แยกตาม PMEx</div></div>
+          <div class="card" style="cursor:pointer" onclick="alert('สร้างรายงาน: Booked Revenue')"><h3>💰 Booked Revenue</h3><div class="sub">มูลค่าสัญญา + revenue ปีนี้/ปีหน้า แยกจังหวัด/solution</div></div>
+          <div class="card" style="cursor:pointer" onclick="alert('สร้างรายงาน: การเก็บเงิน/ค้างชำระ ตามช่วงเวลา')"><h3>🧾 การเก็บเงิน / ค้างชำระ</h3><div class="sub">เก็บได้จริง vs ค้างชำระ แยกลูกค้า/BD (PMO อัปเดตเพื่อรายงานผู้บริหาร)</div></div>
+          <div class="card" style="cursor:pointer" onclick="alert('สร้างรายงาน: งานรายลูกค้า')"><h3>◑ งานรายลูกค้า (อปท.)</h3><div class="sub">สรุปทุกโครงการของแต่ละ อปท.</div></div>
+          <div class="card" style="cursor:pointer" onclick="alert('สร้างรายงาน: ภาระงาน PMEx')"><h3>👥 ภาระงานทีม PMEx</h3><div class="sub">จำนวนงานที่มอบหมายแต่ละคน</div></div>
+        </div>
+      </section>
+
+      <!-- ROLES -->
+      <section class="screen" id="roles">
+        <div class="flowbar">Local Auth (Username/Password) ไม่มี SSO · Role-based · Helpdesk = View-Only</div>
+        <div class="card">
+          <h3>ตารางสิทธิ์ (Permission Matrix)</h3>
+          <table><thead><tr><th>ฟีเจอร์</th><th>Executive</th><th>BD/Sales</th><th>PMO (Isravan)</th><th>PMEx</th><th>Operation</th><th>Helpdesk</th></tr></thead><tbody>
+            <tr><td>งานกำลังจะเข้า / ทะเบียนงาน</td><td>👁</td><td>✓ กรอก</td><td>✓ มอบหมาย</td><td>👁</td><td>–</td><td>–</td></tr>
+            <tr><td>Handover (Accept/Send Back)</td><td>👁</td><td>ส่งได้</td><td>✓</td><td>✓</td><td>–</td><td>–</td></tr>
+            <tr><td>Implementation / เอกสาร</td><td>👁</td><td>✓ เอกสาร</td><td>👁</td><td>✓</td><td>👁</td><td>–</td></tr>
+            <tr><td>Operation / ประกันอุปกรณ์</td><td>👁</td><td>–</td><td>👁</td><td>👁</td><td>✓</td><td>👁</td></tr>
+            <tr><td>การเงิน (อัปเดตสถานะเก็บเงิน/ค้างชำระ)</td><td>👁</td><td>👁</td><td>✓</td><td>–</td><td>–</td><td>–</td></tr>
+            <tr><td>รายงาน</td><td>✓</td><td>👁</td><td>✓</td><td>👁</td><td>👁</td><td>–</td></tr>
+            <tr><td>จัดการผู้ใช้ (Admin)</td><td>–</td><td>–</td><td>✓</td><td>–</td><td>–</td><td>–</td></tr>
+          </tbody></table>
+          <div class="hint" style="margin-top:10px">✓ = แก้ไข/ดำเนินการได้ · 👁 = ดูอย่างเดียว · – = ไม่มีสิทธิ์</div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const titles={dash:"Dashboard (Monitor)",pipeline:"งานกำลังจะเข้า (Pipeline)",projects:"ทะเบียนงาน (Projects)",customers:"ลูกค้า (อปท.) – Customer 360",handover:"รับงาน / Handover",board:"Implementation Board",detail:"รายละเอียดงาน",docs:"เอกสาร",ops:"Operation",renewal:"Renewal & Alert Center",reports:"รายงาน",roles:"Users & Roles"};
+  function go(s){
+    document.querySelectorAll('.screen').forEach(e=>e.classList.remove('on'));
+    document.getElementById(s).classList.add('on');
+    document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active',a.dataset.s===s));
+    document.getElementById('ttl').textContent=titles[s]||s;
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('.nav a').forEach(a=>a.onclick=()=>go(a.dataset.s));
+  document.querySelectorAll('.tabs a').forEach(a=>a.onclick=function(){
+    const p=a.closest('.card');
+    p.querySelectorAll('.tabs a').forEach(x=>x.classList.remove('on'));
+    p.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('on'));
+    a.classList.add('on');document.getElementById(a.dataset.t).classList.add('on');
+  });
+
+  // ===== PROJECTS DATA =====
+  const PMEX_LIST=['สาวินี','ประยุทธ์','วิชัย','กฤษณะ','Nut','Kik'];
+  const SB={'รอโอกาสขาย':'p-gray','เสนอราคาแล้ว':'p-blue','ปิดการขายแล้ว':'p-amber','รอสัญญา':'p-amber','เซ็นสัญญาแล้ว':'p-green','ส่ง Handover แล้ว':'p-teal'};
+  const SP={'-':'p-gray','รอรับงาน':'p-amber','รับงานแล้ว':'p-blue','รออุปกรณ์':'p-blue','กำลัง Implement':'p-blue','รอ UAT':'p-amber','ส่งมอบแล้ว':'p-green','ส่งต่อ Operation':'p-teal','ใกล้หมดสัญญา':'p-red'};
+  const projects=[
+    {name:'OSS + Line OA พัทลุง',cust:'อบจ.พัทลุง',prov:'พัทลุง',prod:['OSS','Line OA'],ctype:'สัญญาเช่า',val:'640,000',bd:'ธนวิทย์',pmex:'',sb:'เสนอราคาแล้ว',sp:'-',stage:'pipeline',usage:'-'},
+    {name:'CDP โครงสร้างพื้นฐาน สมุทรสาคร',cust:'ทน.สมุทรสาคร',prov:'สมุทรสาคร',prod:['CDP'],ctype:'สัญญาจ้าง',val:'890,000',bd:'Pingping',pmex:'',sb:'ปิดการขายแล้ว',sp:'-',stage:'pipeline',usage:'-'},
+    {name:'เพิ่มประสิทธิภาพจัดเก็บภาษี บ้านบางม่วง',cust:'ทต.บ้านบางม่วง',prov:'นนทบุรี',prod:['Smart Tax','แผนที่ภาษี'],ctype:'สัญญาจ้าง',val:'1,150,000',bd:'ธนวิทย์',pmex:'',sb:'รอสัญญา',sp:'-',stage:'pipeline',usage:'-'},
+    {name:'Nan Disaster Risk Platform',cust:'อบจ.น่าน',prov:'น่าน',prod:['Disaster','CDDP'],ctype:'สัญญาจ้าง',val:'25,050,000',bd:'Shane',pmex:'',sb:'เซ็นสัญญาแล้ว',sp:'รอรับงาน',stage:'active',usage:'16 ก.พ. 70'},
+    {name:'SU + CDP กระทุ่มแบน',cust:'ทม.กระทุ่มแบน',prov:'สมุทรสาคร',prod:['SU','CDP','กระดาษ'],ctype:'สัญญาจ้าง+PO',val:'1,760,000',bd:'รักตภา',pmex:'ประยุทธ์',sb:'ส่ง Handover แล้ว',sp:'รับงานแล้ว',stage:'active',usage:'12 ธ.ค. 69'},
+    {name:'เช่าใช้แพลตฟอร์ม CDDP ทต.ขนวน',cust:'ทต.ขนวน',prov:'ขอนแก่น',prod:['CDDP'],ctype:'สัญญาเช่า',val:'112,150',bd:'Tle',pmex:'Kik',sb:'ส่ง Handover แล้ว',sp:'รออุปกรณ์',stage:'active',usage:'30 ก.ย. 69'},
+    {name:'เช่าใช้ระบบ E-saraban มะเขือแจ้',cust:'ทต.มะเขือแจ้',prov:'ลำพูน',prod:['E-saraban'],ctype:'สัญญาเช่า',val:'420,000',bd:'Korakot',pmex:'กฤษณะ',sb:'ส่ง Handover แล้ว',sp:'รอรับงาน',stage:'active',usage:'30 ก.ย. 69'},
+    {name:'Smart Tax + IoT โคราช',cust:'ทน.นครราชสีมา',prov:'นครราชสีมา',prod:['Smart Tax','OSS','CCTV','Smart Pole','Handheld','กระดาษ','แผนที่ภาษี','GPS'],ctype:'สัญญาจ้าง',val:'2,400,000',bd:'รักตภา',pmex:'สาวินี',sb:'ส่ง Handover แล้ว',sp:'รอ UAT',stage:'active',usage:'9 ก.ค. 70'},
+    {name:'เช่าใช้ CDDP เทศบาลเมืองสะเดา',cust:'ทม.สะเดา',prov:'สงขลา',prod:['CDDP'],ctype:'สัญญาเช่า',val:'980,000',bd:'Pingping',pmex:'Nut',sb:'ส่ง Handover แล้ว',sp:'ส่งมอบแล้ว',stage:'ops',usage:'5 ส.ค. 70'},
+    {name:'เช่าใช้ CDDP บางหญ้าแพรก',cust:'ทต.บางหญ้าแพรก',prov:'สมุทรสาคร',prod:['CDDP'],ctype:'สัญญาเช่า',val:'420,000',bd:'Tle',pmex:'วิชัย',sb:'ส่ง Handover แล้ว',sp:'ส่งต่อ Operation',stage:'ops',usage:'5 ต.ค. 69'},
+  ];
+  let pjStageV='all';
+  function pill(v,map){return '<span class="pill '+(map[v]||'p-gray')+'">'+v+'</span>';}
+  function prodTags(a){return a.slice(0,3).map(p=>'<span class="prodtag">'+p+'</span>').join('')+(a.length>3?'<span class="prodtag">+'+(a.length-3)+'</span>':'');}
+  function fillOpts(){
+    const provs=[...new Set(projects.map(p=>p.prov))].sort();
+    document.getElementById('pjProv').insertAdjacentHTML('beforeend',provs.map(p=>'<option>'+p+'</option>').join(''));
+    document.getElementById('pjPmex').insertAdjacentHTML('beforeend',PMEX_LIST.map(p=>'<option>'+p+'</option>').join(''));
+    document.getElementById('pjStat').insertAdjacentHTML('beforeend',Object.keys(SP).filter(s=>s!=='-').map(s=>'<option>'+s+'</option>').join(''));
+    const custs=[...new Set(projects.map(p=>p.cust))].sort();
+    document.getElementById('custSel').insertAdjacentHTML('beforeend',custs.map(c=>'<option>'+c+'</option>').join(''));
+    document.getElementById('rnCust').insertAdjacentHTML('beforeend',custs.map(c=>'<option>'+c+'</option>').join(''));
+    const bds=[...new Set(projects.map(p=>p.bd))].sort();
+    document.getElementById('rnBd').insertAdjacentHTML('beforeend',bds.map(x=>'<option>'+x+'</option>').join(''));
+  }
+  // ===== Renewal & Alert Center =====
+  const THM={'ม.ค.':0,'ก.พ.':1,'มี.ค.':2,'เม.ย.':3,'พ.ค.':4,'มิ.ย.':5,'ก.ค.':6,'ส.ค.':7,'ก.ย.':8,'ต.ค.':9,'พ.ย.':10,'ธ.ค.':11};
+  function parseTH(s){const m=(s||'').trim().split(/\s+/);if(m.length<3||!(m[1] in THM))return null;return new Date(2500+ (+m[2]) -543, THM[m[1]], +m[0]);}
+  function renderRenewal(){
+    const today=new Date(2026,6,8);
+    const cf=document.getElementById('rnCust').value, bf=document.getElementById('rnBd').value;
+    let rows=projects.filter(p=>p.usage&&p.usage!=='-').map(p=>{const dt=parseTH(p.usage);return Object.assign({},p,{days:dt?Math.round((dt-today)/86400000):null});}).filter(p=>p.days!=null).sort((a,b)=>a.days-b.days);
+    const b=document.getElementById('rnBody');b.innerHTML='';
+    let c30=0,c60=0,c90=0,val=0;
+    rows.forEach(p=>{
+      if(cf&&p.cust!==cf)return; if(bf&&p.bd!==bf)return;
+      let cls='p-gray'; if(p.days<=30)cls='p-red'; else if(p.days<=60)cls='p-amber'; else if(p.days<=90)cls='p-teal';
+      if(p.days>=0&&p.days<=30)c30++; else if(p.days<=60&&p.days>30)c60++; else if(p.days<=90&&p.days>60)c90++;
+      if(p.days<=90&&p.days>=0)val+=parseInt(p.val.replace(/,/g,''))||0;
+      b.insertAdjacentHTML('beforeend','<tr><td><b>'+p.name+'</b></td><td>'+p.cust+'</td><td>'+p.usage+'</td><td><span class="pill '+cls+'">'+p.days+' วัน</span></td><td>฿'+p.val+'</td><td>'+p.bd+'</td><td><button class="btn sm amber" onclick="alert(\'Escalate ให้ BD·Sales ไปต่อสัญญา (Renew) — แจ้งเตือนทางอีเมลด้วย\')">ส่งต่อ BD</button></td></tr>');
+    });
+    document.getElementById('rnKpi').innerHTML=
+      '<div class="kpi"><div class="l">หมดใน 30 วัน</div><div class="n" style="color:var(--red)">'+c30+'</div><span class="tag p-red">ด่วน</span></div>'+
+      '<div class="kpi"><div class="l">หมดใน 60 วัน</div><div class="n" style="color:var(--amber)">'+c60+'</div></div>'+
+      '<div class="kpi"><div class="l">หมดใน 90 วัน</div><div class="n" style="color:var(--teal)">'+c90+'</div><span class="tag p-teal">renew</span></div>'+
+      '<div class="kpi"><div class="l">มูลค่ารอต่อสัญญา (≤90 วัน)</div><div class="n">฿'+val.toLocaleString()+'</div></div>';
+  }
+  function pjStage(el){document.querySelectorAll('#projects .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');pjStageV=el.dataset.stage;renderProjects();}
+  function assign(i,val){projects[i].pmex=val;renderProjects();refreshKpi();refreshHandoverOwner();renderHandoverQueue();}
+  // Handover Inbox — งานที่ส่ง Handover มาแล้วและ "รอรับงาน" (PMEx เห็นเฉพาะของตัวเอง / PMO เห็นทั้งหมด)
+  const CURRENT_ROLE='PMO', CURRENT_PMEX='';   // เปลี่ยนเป็นชื่อ PMEx เพื่อจำลองมุมมองของแต่ละคน
+  function renderHandoverQueue(){
+    const b=document.getElementById('hoQueue'); if(!b)return;
+    let list=projects.filter(p=>p.sp==='รอรับงาน');
+    if(CURRENT_ROLE==='PMEx'&&CURRENT_PMEX) list=list.filter(p=>p.pmex===CURRENT_PMEX);
+    b.innerHTML='';
+    document.getElementById('hoCount').textContent=list.length+' งาน';
+    if(!list.length){b.innerHTML='<tr><td colspan="7" class="hint" style="text-align:center;padding:16px">ไม่มีงานรอรับในขณะนี้</td></tr>';return;}
+    list.forEach(p=>{
+      const owner=p.pmex?'<b>'+p.pmex+'</b>':'<span style="color:var(--red)">ยังไม่มอบหมาย</span>';
+      const hl=p.cust==='ทต.มะเขือแจ้'?' style="background:#ecfdf5"':'';
+      b.insertAdjacentHTML('beforeend','<tr'+hl+'><td><b>'+p.name+'</b></td><td>'+p.cust+'</td><td>'+p.bd+'</td><td>'+owner+'</td><td>'+prodTags(p.prod)+'</td><td><span class="docbadge">⚠ รอ Final</span></td><td><button class="btn sm" onclick="openHandover(\''+p.cust+'\')">เปิดดู</button></td></tr>');
+    });
+  }
+  function openHandover(cust){
+    if(cust==='ทต.มะเขือแจ้'){document.getElementById('hoDetail').scrollIntoView({behavior:'smooth',block:'start'});}
+    else{alert('เปิด Handover Document ของ '+cust+' (ในระบบจริงจะโหลดฟอร์มของงานนั้น)');}
+  }
+  // ===== Document manager (แท็บเอกสารในรายละเอียดงาน) =====
+  let docItems=[
+    {name:'TOR',req:true,stat:'Final',upd:'25 มิ.ย. 69'},
+    {name:'สัญญาจ้าง',req:true,stat:'รอเซ็น',upd:'20 มิ.ย. 69'},
+    {name:'Costsheet',req:true,stat:'Final',upd:'19 มิ.ย. 69'},
+    {name:'Brief Sheet',req:false,stat:'Final',upd:'18 มิ.ย. 69'}
+  ];
+  const DOCPILL={'Draft':'p-gray','รอเซ็น':'p-amber','Final':'p-green'};
+  function renderDocs(){
+    const b=document.getElementById('docBody'); if(!b)return; b.innerHTML='';
+    docItems.forEach((d,i)=>{
+      const sel='<select class="inp" style="padding:3px 7px;font-size:11px" onchange="setDocStatus('+i+',this.value)">'+['Draft','รอเซ็น','Final'].map(s=>'<option'+(s===d.stat?' selected':'')+'>'+s+'</option>').join('')+'</select>';
+      b.insertAdjacentHTML('beforeend','<tr><td><b>'+d.name+'</b>'+(d.req?' <span class="hint">*บังคับ</span>':'')+'</td><td><span class="pill '+DOCPILL[d.stat]+'">'+d.stat+'</span></td><td><a style="color:var(--blue);cursor:pointer">เปิด ↗</a> · <a style="color:var(--muted);cursor:pointer" onclick="alert(\'แก้ลิงก์เอกสาร — วาง URL ฉบับ Final ทับของเดิม\')">แก้ลิงก์</a></td><td class="hint">'+d.upd+'</td><td>'+sel+'</td></tr>');
+    });
+    const req=docItems.filter(d=>d.req), allFinal=req.every(d=>d.stat==='Final');
+    const bar=document.getElementById('docStatusBar'); if(!bar)return;
+    if(allFinal){bar.innerHTML='<div class="banner" style="background:#ecfdf5;border-color:#99f6e4;color:var(--brand)">✅ เอกสารบังคับครบ Final แล้ว — ระบบแจ้งเตือน PMEx อัตโนมัติ และปลด badge "เอกสารไม่ Final"</div>';}
+    else{const pend=req.filter(d=>d.stat!=='Final').map(d=>d.name).join(', ');bar.innerHTML='<div class="banner" style="background:#fffbeb;border-color:#fde68a;color:#92400e">⚠ ยังไม่ Final: '+pend+' — ทำงานคู่ขนานได้ แต่ยังคง badge "เอกสารไม่ Final" · เปลี่ยนเป็น Final ที่คอลัมน์ขวาเมื่อได้ฉบับจริง</div>';}
+  }
+  function setDocStatus(i,v){docItems[i].stat=v;docItems[i].upd='วันนี้';renderDocs();}
+  function addDoc(){
+    const n=(document.getElementById('ndName').value||'').trim();
+    if(!n){alert('กรอกชื่อเอกสารก่อน');return;}
+    docItems.push({name:n,req:false,stat:document.getElementById('ndStat').value,upd:'วันนี้'});
+    document.getElementById('ndName').value='';document.getElementById('ndLink').value='';
+    renderDocs();
+  }
+
+  // ===== Finance / Collection manager (แท็บการเงิน — PMO อัปเดตเพื่อรายงาน) =====
+  const FINP={'ยังไม่วางบิล':'p-gray','วางบิลแล้ว':'p-blue','รอจ่าย':'p-amber','จ่ายแล้ว':'p-green','ค้างชำระ':'p-red'};
+  let finItems=[
+    {ins:'งวดที่ 1 (50%)',amt:1200000,due:'31 ก.ค. 69',stat:'จ่ายแล้ว'},
+    {ins:'งวดที่ 2 (30%)',amt:720000,due:'31 ส.ค. 69',stat:'ค้างชำระ'},
+    {ins:'งวดที่ 3 (20%)',amt:480000,due:'30 ก.ย. 69',stat:'ยังไม่วางบิล'}
+  ];
+  const bahtM=n=>'฿'+(n/1000000).toFixed(2)+'M';
+  const baht=n=>'฿'+n.toLocaleString();
+  function renderFin(){
+    const b=document.getElementById('finBody'); if(!b)return; b.innerHTML='';
+    let paid=0,overdue=0,billed=0;
+    finItems.forEach((f,i)=>{
+      if(f.stat==='จ่ายแล้ว')paid+=f.amt;
+      if(f.stat==='ค้างชำระ')overdue+=f.amt;
+      if(f.stat!=='ยังไม่วางบิล')billed+=f.amt;
+      const sel='<select class="inp" style="padding:3px 6px;font-size:11px" onchange="setFin('+i+',this.value)">'+Object.keys(FINP).map(s=>'<option'+(s===f.stat?' selected':'')+'>'+s+'</option>').join('')+'</select>';
+      const act=f.stat==='ค้างชำระ'?'<button class="btn sm amber" onclick="alert(\'แจ้ง BD·Sales ให้ไปติดตามลูกค้า — ยิงแจ้งเตือน (ในระบบ+อีเมล)\')">แจ้ง BD ติดตาม</button>':'';
+      b.insertAdjacentHTML('beforeend','<tr><td>'+f.ins+'</td><td>'+baht(f.amt)+'</td><td>'+f.due+'</td><td><span class="pill '+FINP[f.stat]+'">'+f.stat+'</span></td><td>'+sel+'</td><td>'+act+'</td></tr>');
+    });
+    document.getElementById('finKpi').innerHTML=
+      '<div class="kpi"><div class="l">มูลค่าสัญญา</div><div class="n" style="font-size:18px">฿2.40M</div></div>'+
+      '<div class="kpi"><div class="l">เก็บได้จริง</div><div class="n" style="font-size:18px;color:var(--green)">'+bahtM(paid)+'</div></div>'+
+      '<div class="kpi"><div class="l">ค้างชำระ</div><div class="n" style="font-size:18px;color:var(--red)">'+bahtM(overdue)+'</div></div>'+
+      '<div class="kpi"><div class="l">วางบิลแล้ว</div><div class="n" style="font-size:18px">'+bahtM(billed)+'</div></div>';
+  }
+  function setFin(i,v){finItems[i].stat=v;renderFin();}
+
+  // ===== Equipment manager (แท็บอุปกรณ์ — เพิ่มลอตใหม่ Add-on) =====
+  let asItems=[
+    {n:'CCTV',sn:'SN-CCTV-8841',q:'6',war:'10 ก.ค. 71',st:'ใช้งานอยู่',stc:'p-green'},
+    {n:'Smart Pole',sn:'SN-SP-2210',q:'2',war:'10 ก.ค. 71',st:'พร้อมใช้',stc:'p-blue'}
+  ];
+  function renderAssets(){
+    const b=document.getElementById('asBody'); if(!b)return; b.innerHTML='';
+    asItems.forEach(a=>b.insertAdjacentHTML('beforeend','<tr><td>'+a.n+'</td><td>'+a.sn+'</td><td>'+a.q+'</td><td>'+a.war+'</td><td><span class="pill '+a.stc+'">'+a.st+'</span></td></tr>'));
+  }
+  function addAsset(){
+    const n=(document.getElementById('asName').value||'').trim(); if(!n){alert('กรอกชื่ออุปกรณ์ก่อน');return;}
+    asItems.push({n:n,sn:(document.getElementById('asSn').value||'ลอตใหม่'),q:(document.getElementById('asQty').value||'-'),war:(document.getElementById('asWar').value||'-'),st:'พร้อมใช้',stc:'p-blue'});
+    document.getElementById('asName').value='';document.getElementById('asSn').value='';document.getElementById('asQty').value='';document.getElementById('asWar').value='';
+    renderAssets();
+    alert('เพิ่มอุปกรณ์ลอตใหม่ผูกกับ Project Code เดิม · คำนวณวันหมดประกันแยกลอต');
+  }
+  function acceptHandover(){
+    const p=projects.find(x=>x.cust==='ทต.มะเขือแจ้');
+    if(!p||!p.pmex){alert('ต้องมอบหมาย PMEx ที่ทะเบียนงานก่อนจึงจะรับงานได้');return;}
+    p.sp='รับงานแล้ว';
+    renderProjects();refreshKpi();renderHandoverQueue();
+    alert('รับงานแล้ว — '+p.name+' (ผู้รับผิดชอบ: '+p.pmex+') ย้ายเข้า Implementation Board');
+    go('board');
+  }
+  // Handover owner is READ-ONLY, mirrored from ทะเบียนงาน (single source of truth)
+  function refreshHandoverOwner(){
+    const el=document.getElementById('hoOwner'); if(!el)return;
+    const acc=document.getElementById('hoAccept');
+    const p=projects.find(x=>x.cust==='ทต.มะเขือแจ้');
+    if(p&&p.pmex){el.innerHTML='<b>'+p.pmex+'</b> <span class="pill p-teal">PMEx เจ้าของงาน</span>';if(acc){acc.disabled=false;acc.style.opacity='';acc.title='';}}
+    else{el.innerHTML='<span style="color:var(--red)">ยังไม่มอบหมาย — ไปมอบหมายที่ทะเบียนงานก่อน</span>';if(acc){acc.disabled=true;acc.style.opacity='.5';acc.title='ต้องมอบหมาย PMEx ที่ทะเบียนงานก่อนจึงจะรับงานได้';}}
+  }
+  function renderProjects(){
+    const q=(document.getElementById('pjSearch').value||'').toLowerCase();
+    const prov=document.getElementById('pjProv').value, pf=document.getElementById('pjPmex').value, sf=document.getElementById('pjStat').value;
+    const b=document.getElementById('pjBody');b.innerHTML='';let n=0;
+    projects.forEach((p,i)=>{
+      if(pjStageV!=='all'&&p.stage!==pjStageV)return;
+      if(q&&!(p.name.toLowerCase().includes(q)||p.cust.toLowerCase().includes(q)))return;
+      if(prov&&p.prov!==prov)return;
+      if(pf==='__none'&&p.pmex!=='')return;
+      if(pf&&pf!=='__none'&&p.pmex!==pf)return;
+      if(sf&&p.sp!==sf)return;
+      n++;
+      const pmexCell = p.pmex ? '<b>'+p.pmex+'</b>' :
+        '<select class="inp" style="padding:4px 8px;font-size:11.5px" onchange="assign('+i+',this.value)"><option value="">— มอบหมาย —</option>'+PMEX_LIST.map(x=>'<option>'+x+'</option>').join('')+'</select>';
+      b.insertAdjacentHTML('beforeend','<tr><td><b>'+p.name+'</b></td><td>'+p.cust+'</td><td>'+p.prov+'</td><td>'+prodTags(p.prod)+'</td><td class="hint">'+p.ctype+'</td><td>฿'+p.val+'</td><td>'+pill(p.sb,SB)+'</td><td>'+pill(p.sp,SP)+'</td><td>'+p.bd+'</td><td>'+pmexCell+'</td></tr>');
+    });
+    document.getElementById('pjCount').textContent='แสดง '+n+' จาก '+projects.length+' โครงการ';
+  }
+  function renderCustomer(){
+    const c=document.getElementById('custSel').value;
+    const list=projects.filter(p=>p.cust===c);
+    const b=document.getElementById('custBody');b.innerHTML='';
+    list.forEach(p=>b.insertAdjacentHTML('beforeend','<tr><td><b>'+p.name+'</b></td><td>'+prodTags(p.prod)+'</td><td class="hint">'+p.ctype+'</td><td>฿'+p.val+'</td><td>'+pill(p.sp,SP)+'</td><td>'+p.usage+'</td><td>'+(p.pmex||'<span class="hint">รอมอบหมาย</span>')+'</td></tr>'));
+    document.getElementById('custKpi').innerHTML=
+      '<div class="kpi"><div class="l">จำนวนโครงการ</div><div class="n">'+list.length+'</div></div>'+
+      '<div class="kpi"><div class="l">จังหวัด</div><div class="n" style="font-size:16px">'+(list[0]?list[0].prov:'-')+'</div></div>'+
+      '<div class="kpi"><div class="l">กำลังดำเนินงาน</div><div class="n">'+list.filter(p=>p.stage==='active').length+'</div></div>'+
+      '<div class="kpi"><div class="l">ส่งมอบ/Operation</div><div class="n">'+list.filter(p=>p.stage==='ops').length+'</div></div>';
+  }
+  function refreshKpi(){
+    document.getElementById('k-pipe').textContent=projects.filter(p=>p.stage==='pipeline').length;
+    document.getElementById('k-assign').textContent=projects.filter(p=>p.pmex===''&&p.stage!=='pipeline').length;
+    document.getElementById('k-active').textContent=projects.filter(p=>p.stage==='active').length;
+  }
+
+  // ===== Kanban drag & drop =====
+  let dragCard=null;
+  function dragStart(e){dragCard=e.currentTarget;setTimeout(()=>{if(dragCard)dragCard.style.opacity='.4';},0);}
+  function dragEnd(){if(dragCard)dragCard.style.opacity='';dragCard=null;document.querySelectorAll('#board .col').forEach(c=>c.classList.remove('dragover'));kanCounts();}
+  function allowDrop(e){e.preventDefault();e.currentTarget.classList.add('dragover');}
+  function dragLeave(e){e.currentTarget.classList.remove('dragover');}
+  function dropCard(e){e.preventDefault();e.currentTarget.classList.remove('dragover');if(dragCard){e.currentTarget.querySelector('.coldrop').appendChild(dragCard);}kanCounts();}
+  function kanCounts(){document.querySelectorAll('#board .col').forEach(c=>{c.querySelector('.cnt').textContent=c.querySelectorAll('.kcard').length;});}
+
+  function toggleIntake(){const f=document.getElementById('intakeForm');f.style.display=f.style.display==='none'?'block':'none';}
+  fillOpts();renderProjects();renderCustomer();refreshKpi();renderRenewal();refreshHandoverOwner();renderHandoverQueue();renderDocs();renderFin();renderAssets();
+</script>
+</body>
+</html>
